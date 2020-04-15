@@ -1,13 +1,13 @@
 package com.lingo.github.ui.login
 
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import android.util.Patterns
+import com.lingo.github.R
+import com.lingo.github.Settings
 import com.lingo.github.data.LoginRepository
 import com.lingo.github.data.Result
-
-import com.lingo.github.R
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
@@ -22,7 +22,12 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         val result = loginRepository.login(username, password)
 
         if (result is Result.Success) {
-            _loginResult.value = LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+
+            Settings.username = username
+            Settings.password = password
+
+            _loginResult.value =
+                LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
         } else {
             _loginResult.value = LoginResult(error = R.string.login_failed)
         }
